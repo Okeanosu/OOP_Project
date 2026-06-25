@@ -1,8 +1,8 @@
 Wild-Life Eco Simulation
 1. Thiết kế
-- MVC Logic sinh tồn (BioLogic) và Giao diện hiển thị (ViewLogic):
-+) BioLogic: Xử lý hành vi, sức khỏe, và di chuyển của thực thể.
-+) ViewLogic: Render hình ảnh, camera, và tương tác người dùng.
+MVC Logic sinh tồn (BioLogic) và Giao diện hiển thị (ViewLogic):
+- BioLogic: Xử lý hành vi, sức khỏe, và di chuyển của thực thể.
+- ViewLogic: Render hình ảnh, camera, và tương tác người dùng.
 2. Các gói (Package) & Các lớp
 - com.ecosim.model: Chứa các thực thể (Entity, Rabbit, Wolf, Tiger, Plant, Rock, Bush).
 - com.ecosim.strategy: Chứa các chiến lược sinh tồn (SurvivalStrategy, HunterStrategy, PassiveStrategy, AggressiveStrategy).
