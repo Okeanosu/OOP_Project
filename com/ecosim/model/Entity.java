@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.util.List;
 
 public abstract class Entity {
+    public Entity targetPrey = null;
     protected double x, y;
     protected double speed, baseSpeed;
     protected int hunger = 100;
@@ -13,6 +14,7 @@ public abstract class Entity {
     protected Color color;
     protected SurvivalStrategy strategy;
     protected double lastAngle = Math.random() * Math.PI * 2;
+    protected double size = 20; // Kích thước mặc định của sinh vật
 
     public Entity(double x, double y, Color color, double speed) {
         this.x = x;
@@ -22,27 +24,47 @@ public abstract class Entity {
         this.speed = speed;
     }
 
-    // Hàm update chính được gọi mỗi frame
+        protected void applyTerrainEffects() {
+        // Tọa độ tâm Hồ Nước hiện tại của bạn là (850, 1800)
+        double distToLakeCenter = distanceToPoint(850, 1800);
+
+        if (distToLakeCenter < 350) {
+            // 1. Đang bơi trong Nước -> Đi rất chậm (40%), Hồi khát nước
+            this.speed = this.baseSpeed * 0.4;
+            this.thirst = Math.min(100, this.thirst + 2);
+        } else if (distToLakeCenter < 550) {
+            // 2. Đang dẫm lên Bãi bùn lầy -> Đi chậm (60%)
+            this.speed = this.baseSpeed * 0.6;
+        } else if (this.x > 1800 && this.x < 3300 && this.y > 400 && this.y < 2400) {
+            // 3. Đang trong Khu Rừng rậm -> Đi hơi chậm (80%)
+            this.speed = this.baseSpeed * 0.8;
+        } else {
+            // 4. Ở Đồng Cỏ -> Tốc độ bình thường (100%)
+            this.speed = this.baseSpeed;
+        }
+    }
+
     public void update(List<Entity> allEntities) {
-        if (dead)
-            return;
+        if (dead) return;
 
         // 1. Giảm sinh lực theo thời gian
-        if (Math.random() < 0.05) { // 5% mỗi frame
+        if (Math.random() < 0.05) { 
             hunger = Math.max(0, hunger - 1);
-            thirst = Math.max(0, thirst - 1);
+            if (distanceToPoint(850, 1800) >= 300) {
+                // Chỉ giảm khát nếu không ở dưới hồ
+                thirst = Math.max(0, thirst - 1);
+            }
         }
+        if (hunger <= 0 || thirst <= 0) dead = true;
 
-        if (hunger <= 0 || thirst <= 0)
-            dead = true;
+        applyTerrainEffects(); // 2. Áp dụng hiệu ứng địa hình
+
 
         // 2. Chạy bộ não AI
         if (strategy != null) {
             strategy.execute(this, allEntities);
-        } else {
-            moveWander(); // Nếu không có chiến lược, di chuyển ngẫu nhiên
+        } moveWander();
         }
-    }
 
     public void moveTowards(double tx, double ty, double s) {
         double dx = tx - x;
@@ -61,9 +83,21 @@ public abstract class Entity {
         x += Math.cos(lastAngle) * baseSpeed;
         y += Math.sin(lastAngle) * baseSpeed;
 
-        // Chặn biên 3000x3000px
-        x = Math.max(0, Math.min(3000, x));
-        y = Math.max(0, Math.min(3000, y));
+        if (x <= 50) {
+            x = 50;
+            lastAngle = Math.PI - lastAngle;
+        } else if (x >= 2950) {
+            x = 2950;
+            lastAngle = Math.PI - lastAngle;
+        }
+
+        if (y <= 50) {
+            y = 50;
+            lastAngle = -lastAngle;
+        } else if (y >= 2950) {
+            y = 2950;
+            lastAngle = -lastAngle;
+        }
     }
 
     public double distanceTo(Entity other) {
@@ -89,6 +123,10 @@ public abstract class Entity {
 
     public void setY(double y) {
         this.y = y;
+    }
+
+    public void setStrategy(SurvivalStrategy strategy) {
+        this.strategy = strategy;
     }
 
     public int getHunger() {
@@ -125,5 +163,13 @@ public abstract class Entity {
 
     public void setDead(boolean d) {
         this.dead = d;
+    }
+
+    public double getSize() {
+        return size;
+    }
+
+    public void setSize(double size) {
+        this.size = size;
     }
 }

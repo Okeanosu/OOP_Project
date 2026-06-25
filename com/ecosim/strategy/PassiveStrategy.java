@@ -8,8 +8,13 @@ public class PassiveStrategy implements SurvivalStrategy {
     public void execute(Entity self, List<Entity> allEntities) {
         if (self.isDead())
             return;
+        
+        if (self.getHunger() < 50) {
+            self.setStrategy(new AggressiveStrategy());
+            return; // Dừng chạy các logic nhút nhát phía dưới
+        }
 
-        // Remove self from any hiding bushes
+        // Xóa thỏ khỏi danh sách ẩn nấp của tất cả các bụi cỏ
         for (Entity e : allEntities) {
             if (e instanceof Bush) {
                 ((Bush) e).getHidingPrey().remove(self);

@@ -7,7 +7,7 @@ public class Bush extends Entity {
     private List<Entity> hidingPrey = new ArrayList<>();
 
     public Bush(double x, double y) {
-        super(x, y, new Color(34, 139, 34, 200), 0); // Màu xanh lá đậm, hơi trong suốt
+        super(x, y, new Color(34, 139, 34, 200), 0);
     }
 
     public List<Entity> getHidingPrey() {

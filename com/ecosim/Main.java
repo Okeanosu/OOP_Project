@@ -14,7 +14,7 @@ public class Main {
 
     private static void createAndShowGUI() {
         // 1. Khởi tạo khung hình (Window)
-        JFrame frame = new JFrame("Wild-Life Eco Simulation v1.0");
+        JFrame frame = new JFrame("Wild-Life Eco Simulation");
         
         // 2. Thiết lập hành động khi đóng cửa sổ
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,13 +24,12 @@ public class Main {
         frame.add(ecoSystem);
         
         // 4. Thiết lập kích thước và vị trí
-        frame.setSize(1000, 700); // Kích thước rộng để thấy toàn bản đồ
-        frame.setResizable(false); // Cố định kích thước để tránh lỗi render tọa độ
-        frame.setLocationRelativeTo(null); // Hiển thị cửa sổ ở giữa màn hình
+        frame.setSize(1000, 700);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
         
         frame.setVisible(true);
 
-        // Thông báo console để kiểm tra trạng thái khởi động
         System.out.println("===============================================");
         System.out.println("Running Wild-Life Eco Simulation v1.0...");
         System.out.println("Status: Initialized and GUI is visible.");
